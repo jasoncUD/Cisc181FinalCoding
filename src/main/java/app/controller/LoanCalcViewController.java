@@ -48,7 +48,7 @@ import javafx.scene.control.DatePicker;
 public class LoanCalcViewController implements Initializable {
 
 	private NumberFormat fmtCurrency = NumberFormat.getCurrencyInstance(Locale.US);
-	
+
 	private StudentCalc SC = null;
 
 	@FXML
@@ -89,14 +89,14 @@ public class LoanCalcViewController implements Initializable {
 
 	@FXML
 	private Label lblPaymentsSaved;
-	
+
 	@FXML
 	private Label lblTotalEscrow;
-	
+
 	@FXML
-	private TextField txtAdjustLockTime;
+	private TextField txtAdjustLockYears;
 	@FXML
-	private TextField txtAdjustLoan;
+	private TextField txtAdjustLoanYears;
 	@FXML
 	private TextField txtAdjustLoanRate;
 
@@ -149,13 +149,12 @@ public class LoanCalcViewController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		//TODO: This is for you... so you don't have to type in values over and over.  
-		//	Uncomment the next three lines to set these default values
-		/*		
-		LoanAmount.setText("75000");
-		InterestRate.setText("6.58");
-		NbrOfYears.setText("20");
-		*/
+		// TODO: This is for you... so you don't have to type in values over and over.
+		// Uncomment the next three lines to set these default values
+		/*
+		 * LoanAmount.setText("75000"); InterestRate.setText("6.58");
+		 * NbrOfYears.setText("20");
+		 */
 		cmbLoanType.getItems().addAll("Home", "Auto", "School");
 
 		cmbLoanType.getSelectionModel().selectFirst();
@@ -215,15 +214,14 @@ public class LoanCalcViewController implements Initializable {
 		EscrowAmount.setVisible((strLoanType == "Home"));
 		lblEscrow.setVisible((strLoanType == "Home"));
 	}
-	
+
 	@FXML
 	private void btnSetDefaultAdjustmentParms(KeyEvent event) {
-		
-		txtAdjustLockTime.setText(this.NbrOfYears.getText());
-		txtAdjustLoan.setText("");
+
+		txtAdjustLockYears.setText(this.NbrOfYears.getText());
+		txtAdjustLoanYears.setText("");
 		txtAdjustLoanRate.setText("");
-		
-		
+
 		this.btnClearResultsKeyPress(event);
 
 	}
@@ -243,14 +241,14 @@ public class LoanCalcViewController implements Initializable {
 	@FXML
 	private void btnClearResults(ActionEvent event) {
 
-		
 		paymentList.clear();
 		hbChart.getChildren().clear();
 		stackedBarChart.getChildren().clear();
-		
+
 		lblInterestSaved.setText("");
-		
-		//TODO: The line above shows you how to clear lblInterestSaved.  Clear the rest of the calculated fields
+
+		// TODO: The line above shows you how to clear lblInterestSaved. Clear the rest
+		// of the calculated fields
 
 	}
 
@@ -259,41 +257,35 @@ public class LoanCalcViewController implements Initializable {
 		// create new boolean to check if an error needs to be shown
 		boolean goodtogo = true;
 		// Validate LoanAmount isn't empty
-		
-		
+
 		if (LoanAmount.getText().trim().isEmpty() || !(Double.parseDouble(LoanAmount.getText().trim()) > 0)) {
 			contentText.append("Loan Amount must be a positive double. \n");
 			goodtogo = false;
 		}
-		
-		//TODO: The line above validates LoanAmount.  To fail validation, add to 'contentText' and set 'goodtoGo' to false
-		// 	add the following validaitons:
-		
+
 		if (InterestRate.getText().trim().isEmpty() || Double.parseDouble(InterestRate.getText().trim()) < 1
-				|| Double.parseDouble(InterestRate.getText().trim()) > 30) {
-			contentText.append("Interest Rate must be a positive value between 1 and 30 (inclusive). \n");
+				|| Double.parseDouble(InterestRate.getText().trim()) > 20) {
+			contentText.append("Interest Rate must be a positive value between 1 and 20 (inclusive). \n");
 			goodtogo = false;
 		}
-		//TODO: Validate InterestRate is between 0 and 20.  Make sure there's no alpha characters.
-		
+
 		if (NbrOfYears.getText().trim().isEmpty() || !(Integer.parseInt(NbrOfYears.getText().trim()) > 0)) {
 			contentText.append("Number of Years must be a positive integer. \n");
 			goodtogo = false;
 		}
-		//TODO: Validate NbrOfYears is > 0
 		
-		if (!EscrowAmount.getText().trim().isEmpty() && !(Double.parseDouble(EscrowAmount.getText().trim()) >= 0)) {
+		if (!EscrowAmount.getText().trim().isEmpty() 
+				&& !(Double.parseDouble(EscrowAmount.getText().trim()) >= 0)) {
 			contentText.append("Escrow Amount must be a positive double. \n");
 			goodtogo = false;
 		}
-		//TODO: Validate EscrowAmount >= 0
-		
-		if (!AdditionalPayment.getText().trim().isEmpty()
+
+		if (!AdditionalPayment.getText().trim().isEmpty() 
 				&& !(Double.parseDouble(AdditionalPayment.getText().trim()) >= 0)) {
 			contentText.append("Additional Payment must be a positive double. \n");
+			goodtogo = false;
 		}
-		//TODO: Validate AdditionalPayemnt >= 0
-		
+
 		if (!goodtogo) {
 			Alert fail = new Alert(AlertType.ERROR);
 			fail.setHeaderText("Error!");
@@ -326,22 +318,22 @@ public class LoanCalcViewController implements Initializable {
 				: Double.parseDouble(AdditionalPayment.getText()));
 		double dEscrow = (this.EscrowAmount.getText().isEmpty() ? 0 : Double.parseDouble(this.EscrowAmount.getText()));
 		LocalDate localDate = PaymentStartDate.getValue();
-		
-		int iAdjustLockTime = Integer.parseInt(this.txtAdjustLockTime.getText());
-		int iAdjustLoan = this.txtAdjustLoan.getText() == "" ? 0
-				: Integer.parseInt(this.txtAdjustLoan.getText());  
-		double dAdjustLoanRate = Double.parseDouble(this.txtAdjustLoanRate.getText());
-		
-		
 
-		Loan loanExtra = new Loan(dLoanAmount, dInterestRate, dNbrOfYears, localDate, dAdditionalPayment, dEscrow, iAdjustLockTime, iAdjustLoan, dAdjustLoanRate);
-		Loan loanNoExtra = new Loan(dLoanAmount, dInterestRate, dNbrOfYears, localDate, 0, dEscrow, iAdjustLockTime, iAdjustLoan, dAdjustLoanRate);
+		int iAdjustLockYears = Integer.parseInt(this.txtAdjustLockYears.getText());
+		int iAdjustLoan = this.txtAdjustLoanYears.getText() == "" ? 0
+				: Integer.parseInt(this.txtAdjustLoanYears.getText());
+		double dAdjustLoanRate = Double.parseDouble(this.txtAdjustLoanRate.getText());
+
+		System.out.println("Lock Y/L/R: " + iAdjustLockYears + ", " + iAdjustLoan + ", " + dAdjustLoanRate);
+		Loan loanExtra = new Loan(dLoanAmount, dInterestRate, dNbrOfYears, localDate, dAdditionalPayment, dEscrow,
+				iAdjustLockYears, iAdjustLoan, dAdjustLoanRate);
+		Loan loanNoExtra = new Loan(dLoanAmount, dInterestRate, dNbrOfYears, localDate, 0, dEscrow, iAdjustLockYears,
+				iAdjustLoan, dAdjustLoanRate);
 
 		for (Payment p : loanExtra.getLoanPayments()) {
 			paymentList.add(p);
 		}
 
-		
 		lblTotalPayemnts.setText(fmtCurrency.format(loanExtra.getTotalPayments()));
 
 		lblTotalInterest.setText(fmtCurrency.format(loanExtra.getTotalInterest()));
@@ -350,11 +342,10 @@ public class LoanCalcViewController implements Initializable {
 		lblPaymentsSaved
 				.setText(String.valueOf(loanNoExtra.getLoanPayments().size() - loanExtra.getLoanPayments().size()));
 
-		lblMonthlyPayment.setText(fmtCurrency.format(
-				loanExtra.GetPMT() + 
-				+ loanExtra.getAdditionalPayment() + loanExtra.getEscrow()));		
+		lblMonthlyPayment.setText(
+				fmtCurrency.format(loanExtra.GetPMT() + +loanExtra.getAdditionalPayment() + loanExtra.getEscrow()));
 		lblTotalEscrow.setText(fmtCurrency.format(loanExtra.getTotalEscrow()));
-		
+
 		XYChart.Series seriesExtra = new XYChart.Series();
 		XYChart.Series seriesNoExtra = new XYChart.Series();
 
@@ -384,18 +375,15 @@ public class LoanCalcViewController implements Initializable {
 
 		areaChartAmortization.getData().addAll(seriesExtra, seriesNoExtra);
 
-		
-		
-		
 		for (final Series<Number, Number> series : areaChartAmortization.getData()) {
 			for (final Data<Number, Number> data : series.getData()) {
-				Tooltip tooltip = new Tooltip();				
-				
+				Tooltip tooltip = new Tooltip();
+
 				tooltip.setText(fmtCurrency.format(data.getYValue()));
 				Tooltip.install(data.getNode(), tooltip);
 			}
 		}
-		
+
 		hbChart.getChildren().add(areaChartAmortization);
 
 		createStackedBar();
@@ -409,28 +397,24 @@ public class LoanCalcViewController implements Initializable {
 		principalPayments.setName("Principle");
 		XYChart.Series<String, Number> interestPayments = new XYChart.Series<>();
 		interestPayments.setName("Interest");
-		
+
 		XYChart.Series<String, Number> escrowPayments = new XYChart.Series<>();
 		escrowPayments.setName("Escrow");
-		
+
 		for (Payment P : paymentList) {
 			if (!dates.contains(Integer.toString(P.getDueDate().getYear()))) {
 				dates.add(Integer.toString(P.getDueDate().getYear()));
 			}
-			principalPayments.getData().add(new XYChart.Data<String, Number>(
-					Integer.toString(P.getDueDate().getYear()), 
-					P.getPrinciple()+P.getAdditionalPayment()));
-			interestPayments.getData().add(new XYChart.Data<String, Number>(
-					Integer.toString(P.getDueDate().getYear()), 
+			principalPayments.getData().add(new XYChart.Data<String, Number>(Integer.toString(P.getDueDate().getYear()),
+					P.getPrinciple() + P.getAdditionalPayment()));
+			interestPayments.getData().add(new XYChart.Data<String, Number>(Integer.toString(P.getDueDate().getYear()),
 					P.getInterestPayment()));
-			
-			escrowPayments.getData().add(new XYChart.Data<String, Number>(
-					Integer.toString(P.getDueDate().getYear()), 
-					P.getEscrowPayment()));
+
+			escrowPayments.getData().add(
+					new XYChart.Data<String, Number>(Integer.toString(P.getDueDate().getYear()), P.getEscrowPayment()));
 		}
-		
-		xAxis.setCategories(FXCollections
-				.<String>observableArrayList(dates));
+
+		xAxis.setCategories(FXCollections.<String>observableArrayList(dates));
 		xAxis.setLabel("Year");
 		NumberAxis yAxis = new NumberAxis();
 		yAxis.setLabel("Amount (USD)");
@@ -440,7 +424,7 @@ public class LoanCalcViewController implements Initializable {
 		// Setting the data to bar chart
 		mystackedBarChart.getData().addAll(principalPayments, interestPayments, escrowPayments);
 		stackedBarChart.getChildren().add(mystackedBarChart);
-		
+
 	}
 
 	/**
@@ -476,6 +460,5 @@ public class LoanCalcViewController implements Initializable {
 	private void PlotData(XYChart.Series series, int PaymentNbr, double Balance) {
 		series.getData().add(new XYChart.Data(PaymentNbr, Balance));
 	}
-
 
 }

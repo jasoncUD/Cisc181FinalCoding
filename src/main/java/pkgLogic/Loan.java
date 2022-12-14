@@ -20,33 +20,35 @@ public class Loan {
 	
 	private ArrayList<Payment> loanPayments = new ArrayList<Payment>();
 
-	public Loan(double loanAmount, double interestRate, int loanPaymentCnt, LocalDate startDate,
+	public Loan(double loanAmount, double interestRate, int numYears, LocalDate startDate,
 			double additionalPayment, double escrow
-			, int AdjustLockTime, int AdjustLoan, double AdjustLoanRate) {
+			, int adjustLockYears, int adjustLoanYears, double adjustLoanRate) {
 		super();
 			
-
+		int loanPaymentCnt = numYears*12;
 		
 		double tmpInterestRate = interestRate;
-		int tmpAdjustLockTime = AdjustLockTime;
+		int tmpAdjustLockYears = adjustLockYears;
 		
-		for (int i = 1; i<=loanPaymentCnt; i++) 
-		{
-			if ((AdjustLoan != 0) && (AdjustLoanRate != 0))
-			{
-				if (i > (AdjustLockTime * 12)) {
-					tmpInterestRate += AdjustLoanRate;
-					tmpAdjustLockTime += AdjustLoan;
+		System.out.println("start hmRate.put");
+		for (int i = 1; i<=loanPaymentCnt; i++) {
+			if ((adjustLoanYears != 0) && (adjustLoanRate != 0)) {
+				if (i > (tmpAdjustLockYears * 12)) {
+					System.out.println("i > (tmpAdjustLockYears * 12");
+					tmpInterestRate += adjustLoanRate;
+					tmpAdjustLockYears += adjustLoanYears;
 				}
 			}
 
 			hmRates.put(i, tmpInterestRate);
+			System.out.println("hmRates.put(" + i + "," + tmpInterestRate);
 		}
+		System.out.println("end hmRate.put");
 		
 		
 		LoanAmount = loanAmount;
 		InterestRate = interestRate;
-		LoanPaymentCnt = loanPaymentCnt * 12;
+		LoanPaymentCnt = loanPaymentCnt;
 		StartDate = startDate;
 		AdditionalPayment = additionalPayment;
 		bCompoundingOption = false;
@@ -56,25 +58,26 @@ public class Loan {
 		double RemainingBalance = LoanAmount;
 		int PaymentCnt = 1;
 		
-		//TODO: Create a payment until 'remaining balance' is < PMT + Additional Payment
-		//		Hint: use while loop
 		while (RemainingBalance >= this.GetPMT() + this.AdditionalPayment) {
-			InterestRate = this.getInterestRate(PaymentCnt);
-			
-			Payment payment = new Payment(RemainingBalance, PaymentCnt++, startDate, this, false);
-			RemainingBalance = payment.getEndingBalance(); 
-			startDate = startDate.plusMonths(1);
-			loanPayments.add(payment);
+			this.InterestRate = this.getInterestRate(PaymentCnt);
+			try {
+				Payment payment = new Payment(RemainingBalance, PaymentCnt++, startDate, this, false);
+				RemainingBalance = payment.getEndingBalance(); 
+				startDate = startDate.plusMonths(1);
+				loanPayments.add(payment);
+			} catch (Exception e) {
+				System.out.println("exception for payment " + PaymentCnt);
+			}
+
 		}
+		System.out.println("finished adding payments");
 		
-		Payment payment = new Payment(RemainingBalance, PaymentCnt++, startDate, this, false);
+		Payment payment = new Payment(RemainingBalance, PaymentCnt++, startDate, this, true);
 		loanPayments.add(payment);
-		//TODO: Create final payment (last payment might be partial payment)
 	}
 
 	public double GetPMT() {
         double PMT = 0;
-        //TODO: Calculate PMT (use FinanceLib.pmt)
         PMT = FinanceLib.pmt(this.InterestRate/12,
                 this.LoanPaymentCnt,
                 this.LoanAmount,
@@ -85,17 +88,17 @@ public class Loan {
 
     public double getTotalPayments() {
         double tot = 0;
-        //TODO: Calculate total payments
         for (Payment val:this.loanPayments) {
+        	System.out.println("val.getPayment(): " + val.getPayment());
             tot += val.getPayment();
         }
+        System.out.println("total: " + tot);
         return tot;
     }
 
     public double getTotalInterest() {
 
         double interest = 0;
-        //TODO: Calculate total Interest
         for (Payment val:this.loanPayments) {
             interest += val.getInterestPayment();
         }

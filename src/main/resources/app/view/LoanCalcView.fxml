@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="709.0" prefWidth="1027.0" stylesheets="@BootStrap.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controller.LoanCalcViewController">
+<BorderPane prefHeight="709.0" prefWidth="1027.0" stylesheets="@BootStrap.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controller.LoanCalcViewController">
 	<bottom>
 		<HBox alignment="CENTER" prefHeight="69.0" prefWidth="872.0" BorderPane.alignment="CENTER">
 			<children>
@@ -67,9 +67,9 @@
 								<TextField fx:id="NbrOfYears" onKeyPressed="#btnSetDefaultAdjustmentParms" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <children>
-                              <TextField fx:id="txtAdjustLockTime" />
-                              <TextField fx:id="txtAdjustLoanMonths" />
-                              <TextField fx:id="txtAdjustLoanRate" />
+                              <TextField fx:id="txtAdjustLockYears" promptText="Yr Locked" />
+                              <TextField fx:id="txtAdjustLoanYears" promptText="Yr / Incr" />
+                              <TextField fx:id="txtAdjustLoanRate" promptText="Rate Incr" />
                            </children>
                         </HBox>
 								<DatePicker fx:id="PaymentStartDate" onKeyPressed="#btnClearResultsKeyPress" prefHeight="25.0" prefWidth="209.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
