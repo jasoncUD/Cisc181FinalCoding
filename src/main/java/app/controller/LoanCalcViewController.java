@@ -324,7 +324,6 @@ public class LoanCalcViewController implements Initializable {
 				: Integer.parseInt(this.txtAdjustLoanYears.getText());
 		double dAdjustLoanRate = Double.parseDouble(this.txtAdjustLoanRate.getText());
 
-		System.out.println("Lock Y/L/R: " + iAdjustLockYears + ", " + iAdjustLoan + ", " + dAdjustLoanRate);
 		Loan loanExtra = new Loan(dLoanAmount, dInterestRate, dNbrOfYears, localDate, dAdditionalPayment, dEscrow,
 				iAdjustLockYears, iAdjustLoan, dAdjustLoanRate);
 		Loan loanNoExtra = new Loan(dLoanAmount, dInterestRate, dNbrOfYears, localDate, 0, dEscrow, iAdjustLockYears,

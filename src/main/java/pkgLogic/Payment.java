@@ -47,7 +47,6 @@ public class Payment {
 			this.AdditionalPayment = loan.getAdditionalPayment();
 			this.EndingBalance = beginningBalance - this.Principle;
 		}
-		System.out.println("added payment " + this.PaymentNbr);
 	}
 
 	public int getPaymentNbr() {
